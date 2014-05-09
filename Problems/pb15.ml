@@ -1,11 +1,11 @@
 let replicate l n =
 	let rec create_list elem n acc = match n with
-	| 0 -> acc
-	| n -> create_list elem (n-1) (elem::acc)
+		| 0 -> acc
+		| n -> create_list elem (n-1) (elem::acc)
 	in
 	let rec local acc l = match l with
-	| [] -> acc
-	| t::q -> local (List.append (create_list t n []) acc) q
+		| [] -> acc
+		| t::q -> local (List.append (create_list t n []) acc) q
 	in List.rev (local [] l);;
 
 assert (replicate ["a";"b";"c"] 2 = ["a";"a";"b";"b";"c";"c"]);;
