@@ -1,4 +1,4 @@
-# 99ML
+# 99 Camels
 
 Ninety-nine LISP problems solved with OCaml.
 
