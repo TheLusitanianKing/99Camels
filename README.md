@@ -1,9 +1,10 @@
 # 99 Camels
-
 Ninety-nine LISP problems solved with OCaml.
 
-## N.B.
+## Progress
+10 out of 99.
 
+## N.B.
 This was an old repository with first commits dating of 2014 with (old) OCaml.
 
 I decided to do it all again, this time in 2022, with more up-to-date OCaml.
