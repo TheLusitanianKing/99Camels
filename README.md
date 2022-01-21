@@ -1,13 +1,15 @@
-# 99 Camels
-Ninety-nine LISP problems solved with OCaml.
+:england: [English version/Versão inglesa](README-en.md)
+***
 
-## Progress
-10 out of 99.
+# 99 Camels
+Noventa e nove desafios LISP resolvidos com OCaml.
+
+## Progresso
+10 dos 99.
 
 ## N.B.
-This was an old repository with first commits dating of 2014 with (old) OCaml.
+Este é um repositório antigo, com os primeiros commits feitos em 2014.
 
-I decided to do it all again, this time in 2022, with more up-to-date OCaml.
-And also, because there were a lot of missing solutions.
+Decidi fazer tudo de novo, desta vez em 2022, com OCaml mais atualizado e sobretudo porque nem tinha feito metade dos desafios na altura (tinha resolvidos uns 35 dos 99 que existem, principalmente por falta de tempo).
 
-If you want to see the old stuff, I moved them to [archives/](archives).
+Se quiser ver as antigas soluções, pode encontrá-las em [archives](archives).
