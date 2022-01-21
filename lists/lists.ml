@@ -1,4 +1,4 @@
-open List;; (* will only be used for folds *)
+open List;;
 
 (* 1: write a function that returns the last element of a list. *)
 let rec last ls = match ls with
@@ -69,6 +69,30 @@ let pack ls =
 let encode ls =
   pack ls |> List.map (fun packed -> (length packed, List.hd packed))
 
+(* 11: modified run-length encoding. *)
+type 'a rle =
+  | One of 'a
+  | Many of int * 'a;;
+
+let encode' ls =
+  let f l = match l with
+    | [] -> failwith "Should not happen."
+    | [x] -> One x
+    | ls -> Many (List.length ls, List.hd ls) in
+  pack ls |> List.map f
+
+(* 12: decode a run-length encoded list. *)
+let replicate n x =
+  let rec helper acc n' =
+    if n' <= 0 then acc else helper (x::acc) (n'-1)
+  in helper [] n
+
+let decode ls =
+  let f x = match x with
+    | One x -> [x]
+    | Many (n, x) -> replicate n x in
+  List.map f ls |> List.flatten
+
 let () =
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
   assert (last [] = None);
@@ -100,5 +124,11 @@ let () =
 
   assert (encode ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
           = [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]);
+  
+  assert (encode' ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
+          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]);
+
+  assert (decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]
+          = ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]);
         
   print_string @@ "Everything is working fine" ^ "\n"

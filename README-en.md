@@ -5,7 +5,7 @@
 Ninety-nine LISP problems solved with OCaml.
 
 ## Progress
-10 out of 99.
+12 out of 99.
 
 ## N.B.
 This is an old repository with first commits dating of 2014.
