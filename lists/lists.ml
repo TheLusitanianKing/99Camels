@@ -49,20 +49,21 @@ let rec flatten ns =
 
 (* 8: eliminate consecutive duplicates of list elements. *)
 let compress ls =
-  let rec helper acc last_seen ls' = match (ls', last_seen) with
-    | ([], _) -> rev acc
-    | ((x::xs), Some x') when x = x' -> helper acc last_seen xs
-    | ((x::xs), _) -> helper (x::acc) (Some x) xs
-  in helper [] None ls
+  let rec helper acc ls' = match ls' with
+    | [] -> acc
+    | [x] -> rev (x::acc)
+    | x::x'::xs when x = x' -> helper acc (x'::xs)
+    | x::x'::xs -> helper (x::acc) (x'::xs)
+  in helper [] ls
 
 (* 9: pack consecutive duplicates of list elements into sublists. *)
 let pack ls =
-  let rec helper acc tmp_acc last_seen ls' = match (ls', last_seen) with
-    | ([], _) -> rev (tmp_acc :: acc)
-    | ((x::xs), Some x') when x = x' -> helper acc (x :: tmp_acc) last_seen xs
-    | ((x::xs), _) when tmp_acc = [] -> helper acc (x :: tmp_acc) (Some x) xs
-    | ((x::xs), _) -> helper (tmp_acc :: acc) [x] (Some x) xs
-  in helper [] [] None ls
+  let rec helper acc tmp_acc ls' = match ls' with
+    | [] -> tmp_acc :: acc
+    | [x] -> (x :: tmp_acc) :: acc
+    | (x::x'::xs) when x = x' -> helper acc (x :: tmp_acc) (x'::xs)
+    | (x::x'::xs) -> helper ((x :: tmp_acc) :: acc) [] (x'::xs)
+  in rev (helper [] [] ls)
 
 (* 10: run-length encoding of a list. *)
 let encode ls =
@@ -100,4 +101,4 @@ let () =
   assert (encode ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
           = [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]);
         
-  print_string @@ "Everything is fine" ^ "\n"
+  print_string @@ "Everything is working fine" ^ "\n"
