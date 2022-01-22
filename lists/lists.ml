@@ -93,6 +93,30 @@ let decode ls =
     | Many (n, x) -> replicate n x in
   List.map f ls |> List.flatten
 
+(* 13: run-length encoding of a list (direct solution). *)
+let partition p ls =
+  let rec helper acc ls' = match ls' with
+    | (x::xs) when p x -> helper (x :: acc) xs
+    | s -> (rev acc, s)
+  in helper [] ls
+
+let encode'' ls =
+  let rec helper acc ls' = match ls' with
+    | [] -> acc
+    | (x::_) as s ->
+      let (ys, zs) = partition (fun n -> n = x) s in
+      let len = length ys in
+      let t = if len == 1 then One x else Many (len, x) in
+      helper (t::acc) zs
+  in rev @@ helper [] ls
+
+(* 14: duplicate the elements of a list. *)
+let duplicate ls =
+  let rec helper acc ls' = match ls' with
+    | [] -> acc
+    | (x::xs) -> helper (x::x::acc) xs
+  in rev @@ helper [] ls
+
 let () =
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
   assert (last [] = None);
@@ -131,4 +155,9 @@ let () =
   assert (decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]
           = ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]);
         
+  assert (encode'' ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
+          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]);
+  
+  assert (duplicate ["a"; "b"; "c"; "c"; "d"] = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]);
+
   print_string @@ "Everything is working fine" ^ "\n"
