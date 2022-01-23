@@ -84,7 +84,7 @@ let encode' ls =
 (* 12: decode a run-length encoded list. *)
 let replicate n x =
   let rec helper acc n' =
-    if n' <= 0 then acc else helper (x::acc) (n'-1)
+    if n' <= 0 then acc else helper (x::acc) (n' - 1)
   in helper [] n
 
 let decode ls =
@@ -127,6 +127,32 @@ in helper [] n
 let replicate ls n =
   List.map (fun x -> replicate_elem x n) ls |> List.flatten
 
+(* 16: drop every N'th element from a list. *)
+let drop ls n =
+  let rec helper acc ls' m = match ls' with
+    | [] -> acc
+    | (_::xs) when m = 1 -> helper acc xs n
+    | (x::xs) -> helper (x::acc) xs (m - 1)
+  in rev @@ helper [] ls n
+
+(* 17: split a list into two parts; the length of the first part is given. *)
+let split ls n =
+  let rec helper acc ls' m = match ls' with
+    | [] -> (rev acc, [])
+    | (x::xs) when m = 1 -> (rev @@ x::acc, xs)
+    | (x::xs) -> helper (x::acc) xs (m - 1)
+  in helper [] ls n
+
+(* 18: extract a slice from a list. *)
+let slice ls x y =
+  let rec helper acc ls' i = match ls' with
+    | [] -> acc
+    | _ when i > y -> acc
+    | (_::xs) when i < x -> helper acc xs (i + 1)
+    | (x::xs) -> helper (x::acc) xs (i + 1)
+  in rev @@ helper [] ls 0
+
+(* list of assertions to test previously defined functions *)
 let () =
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
   assert (last [] = None);
@@ -173,5 +199,15 @@ let () =
 
   assert (replicate ["a"; "b"; "c"] 3
           = ["a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c"]);
+  
+  assert (drop ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j"] 3
+          = ["a"; "b"; "d"; "e"; "g"; "h"; "j"]);
+
+  assert (split ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j"] 3
+          = (["a"; "b"; "c"], ["d"; "e"; "f"; "g"; "h"; "i"; "j"]));
+  assert (split ["a"; "b"; "c"; "d"] 5 = (["a"; "b"; "c"; "d"], []));
+
+  assert (slice ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j"] 2 6
+          = ["c"; "d"; "e"; "f"; "g"]);
 
   print_string @@ "Everything is working fine" ^ "\n"
