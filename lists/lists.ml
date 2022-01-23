@@ -117,6 +117,16 @@ let duplicate ls =
     | (x::xs) -> helper (x::x::acc) xs
   in rev @@ helper [] ls
 
+(* 15: replicate the elements of a list a given number of times. *)
+let replicate_elem x n =
+  let rec helper acc n = match n with
+    | 0 -> acc
+    | _ -> helper (x::acc) (n-1)
+in helper [] n
+
+let replicate ls n =
+  List.map (fun x -> replicate_elem x n) ls |> List.flatten
+
 let () =
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
   assert (last [] = None);
@@ -139,25 +149,29 @@ let () =
   assert (flatten [One "a"; Many [One "b"; Many [One "c" ;One "d"]; One "e"]]
           = ["a"; "b"; "c"; "d"; "e"]);
 
-  assert (compress ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
-          = ["a"; "b"; "c"; "a"; "d"; "e"]);
+  assert (compress ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"]
+          = ["a"; "b"; "c"; "a"; "d"]);
 
-  assert (pack ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "d"; "e"; "e"; "e"; "e"]
-          = [["a"; "a"; "a"; "a"]; ["b"]; ["c"; "c"]; ["a"; "a"]; ["d"; "d"]; ["e"; "e"; "e"; "e"]]);
+  assert (pack ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "d"]
+          = [["a"; "a"; "a"; "a"]; ["b"]; ["c"; "c"]; ["a"; "a"]; ["d"; "d"]]);
   assert (pack ["a"; "b"; "c"; "d"; "e"] = [["a"]; ["b"]; ["c"]; ["d"]; ["e"]]);
 
-  assert (encode ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
-          = [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]);
+  assert (encode ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"]
+          = [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d")]);
   
-  assert (encode' ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
-          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]);
+  assert (encode' ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"]
+          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"]);
 
-  assert (decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]
-          = ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]);
+  assert (decode [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"]
+          = ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"]);
         
-  assert (encode'' ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
-          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"; Many (4, "e")]);
+  assert (encode'' ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d"]
+          = [Many (4, "a"); One "b"; Many (2, "c"); Many (2, "a"); One "d"]);
   
-  assert (duplicate ["a"; "b"; "c"; "c"; "d"] = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]);
+  assert (duplicate ["a"; "b"; "c"; "c"; "d"]
+          = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]);
+
+  assert (replicate ["a"; "b"; "c"] 3
+          = ["a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c"]);
 
   print_string @@ "Everything is working fine" ^ "\n"
