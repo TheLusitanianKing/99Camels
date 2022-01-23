@@ -152,6 +152,21 @@ let slice ls x y =
     | (x::xs) -> helper (x::acc) xs (i + 1)
   in rev @@ helper [] ls 0
 
+(* 19: rotate a list N places to the left. *)
+let rotate ls n =
+  let (a, b) = if n <= 0
+    then split ls (List.length ls + n)
+    else split ls n in
+  List.append b a
+
+(* 20: remove the K'th element from a list. *)
+let remove_at n ls =
+  let rec helper acc m ls' = match ls' with
+    | [] -> rev acc
+    | (_::xs) when m = 0 -> List.append (rev acc) xs
+    | (x::xs) -> helper (x::acc) (m - 1) xs
+  in helper [] n ls
+
 (* list of assertions to test previously defined functions *)
 let () =
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
@@ -209,5 +224,12 @@ let () =
 
   assert (slice ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"; "i"; "j"] 2 6
           = ["c"; "d"; "e"; "f"; "g"]);
+  
+  assert (rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] 3
+          = ["d"; "e"; "f"; "g"; "h"; "a"; "b"; "c"]);
+  assert (rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] (-2)
+          = ["g"; "h"; "a"; "b"; "c"; "d"; "e"; "f"]);
+  
+  assert (remove_at 1 ["a"; "b"; "c"; "d"] = ["a"; "c"; "d"]);
 
   print_string @@ "Everything is working fine" ^ "\n"
