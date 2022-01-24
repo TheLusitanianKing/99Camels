@@ -157,33 +157,57 @@ let rotate ls n =
   let (a, b) = if n <= 0
     then split ls (List.length ls + n)
     else split ls n in
-  List.append b a
+  b @ a
 
 (* 20: remove the K'th element from a list. *)
 let remove_at n ls =
   let rec helper acc m ls' = match ls' with
     | [] -> rev acc
-    | (_::xs) when m = 0 -> List.append (rev acc) xs
+    | (_::xs) when m = 0 -> (rev acc) @ xs
     | (x::xs) -> helper (x::acc) (m - 1) xs
   in helper [] n ls
 
 (* 21: insert an element at a given position into a list. *)
 let insert_at elem index ls =
   let rec helper acc i ls' = match ls' with
-    | [] -> List.append (rev acc) [elem]
-    | _ when i = index -> List.append (List.append (rev acc) [elem]) ls'
+    | [] -> (rev acc) @ [elem]
+    | _ when i = index -> ((rev acc) @ [elem]) @ ls'
     | (x::xs) -> helper (x::acc) (i + 1) xs
     in helper [] 0 ls
 
 (* 22: create a list containing all integers within a given range. *)
 let range x y =
   let rec helper acc i =
-    if i == y then List.append (rev acc) [i] 
+    if i == y then (rev acc) @ [i] 
     else helper (i::acc) (if x <= y then i + 1 else i - 1)
   in helper [] x
 
+(* 23: extract a given number of randomly selected elements from a list. *)
+let rand_select ls n =
+  let len = List.length ls in
+  if n > len
+    then failwith "Not enough elements to select from."
+    else
+      let rec helper acc ls' current_length =
+        if len - current_length = n then acc
+        else
+          let selected_index = Random.int current_length in
+          helper ((List.nth ls' selected_index)::acc) (remove_at selected_index ls') (current_length - 1)
+      in helper [] ls len
+
+(* 24: lotto: draw N different random numbers from the set 1..M. *)
+let lotto_select n m = rand_select (range 1 m) n
+
+(* 25: generate a random permutation of the elements of a list. *)
+let permutation ls = rand_select ls (List.length ls)
+
+(* 26: generate the combinations of K distinct objects chosen from the N elements of a list. *)
+(* 27: group the elements of a set into disjoint subsets. *)
+
 (* list of assertions to test previously defined functions *)
 let () =
+  Random.init 0;
+
   assert (last ["a"; "b"; "c"; "d"] = Some "d");
   assert (last [] = None);
 
@@ -247,14 +271,17 @@ let () =
   
   assert (remove_at 1 ["a"; "b"; "c"; "d"] = ["a"; "c"; "d"]);
 
-  assert (insert_at "alfa" 1 ["a"; "b"; "c"; "d"]
-          = ["a"; "alfa"; "b"; "c"; "d"]);
-  assert (insert_at "alfa" 3 ["a"; "b"; "c"; "d"]
-          = ["a"; "b"; "c"; "alfa"; "d"]);
-  assert (insert_at "alfa" 4 ["a"; "b"; "c"; "d"]
-          = ["a"; "b"; "c"; "d"; "alfa"]);
+  assert (insert_at "x" 1 ["a"; "b"; "c"; "d"] = ["a"; "x"; "b"; "c"; "d"]);
+  assert (insert_at "x" 3 ["a"; "b"; "c"; "d"] = ["a"; "b"; "c"; "x"; "d"]);
+  assert (insert_at "x" 4 ["a"; "b"; "c"; "d"] = ["a"; "b"; "c"; "d"; "x"]);
 
   assert (range 4 9 = [4; 5; 6; 7; 8; 9]);
   assert (range 9 4 = [9; 8; 7; 6; 5; 4]);
+
+  assert (rand_select [1; 2; 3; 4] 3 = [3; 2; 1]);
+
+  assert (lotto_select 6 49 = [27; 21; 42; 17; 12; 6]);
+
+  assert (permutation [1; 2; 3; 4] = [1; 4; 3; 2]);
 
   print_string @@ "Everything is working fine" ^ "\n"
