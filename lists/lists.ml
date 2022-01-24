@@ -63,7 +63,7 @@ let pack ls =
     | [x] -> (x :: tmp_acc) :: acc
     | (x::x'::xs) when x = x' -> helper acc (x :: tmp_acc) (x'::xs)
     | (x::x'::xs) -> helper ((x :: tmp_acc) :: acc) [] (x'::xs)
-  in rev (helper [] [] ls)
+  in rev @@ helper [] [] ls
 
 (* 10: run-length encoding of a list. *)
 let encode ls =
