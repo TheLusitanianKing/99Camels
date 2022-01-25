@@ -5,7 +5,9 @@
 Noventa e nove desafios LISP resolvidos com OCaml.
 
 ## Progresso
-25 dos 99.
+
+* Listas: 25 dos 27.
+* Aritmética: 1 dos 11.
 
 ## N.B.
 Este é um repositório antigo, com os primeiros commits feitos em 2014.
