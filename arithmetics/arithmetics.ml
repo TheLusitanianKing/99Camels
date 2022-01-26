@@ -41,6 +41,19 @@ let factors n =
         else helper acc (d + 1) n
 	in List.rev @@ helper [] 2 n
 
+(* 36: determine the prime factors of a given positive integer (2). *)
+let factors' n =
+  let rec helper d n =
+    if n = 1 then []
+    else
+      if n mod d = 0
+        then
+          match helper d (n / d) with
+          | (x, y)::xs when x = d -> (x, y + 1)::xs
+          | xs -> (d, 1)::xs
+        else helper (d + 1) n
+  in helper 2 n
+  
 (* list of assertions to test previously defined functions *)
 let () =
   assert (not @@ is_prime 1);
@@ -58,5 +71,7 @@ let () =
   assert (phi 13 = 12);
 
   assert (factors 315 = [3; 3; 5; 7]);
+
+  assert (factors' 315 = [(3, 2); (5, 1); (7, 1)]);
 
   print_string @@ "Everything is working fine" ^ "\n"
