@@ -1,2 +1,3 @@
 (executable
- (name arithmetics))
+ (name arithmetics)
+ (libraries unix))

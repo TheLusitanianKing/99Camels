@@ -1,19 +1,8 @@
 (* 31: determine whether a given integer number is prime. *)
-let range x y = (* coming from one of the former challenges *)
-  let rec helper acc i =
-    if i == y then (List.rev acc) @ [i] 
-    else helper (i::acc) (if x <= y then i + 1 else i - 1)
-  in helper [] x
-
-let all p ls =
-  List.map p ls
-  |> List.filter ((=) false)
-  |> List.length
-  |> ((=) 0)
-
-let is_prime x = (* naive approach *)
-  if x <= 1 then false
-  else all (fun y -> not (x mod y == 0)) (range 2 (x - 1))
+let is_prime n =
+  let rec helper d = 
+    (n <> 1) && (d * d > n || (n mod d <> 0 && helper (d + 1)))
+  in helper 2
 
 (* 32: determine the greatest common divisor of two positive integer numbers. *)
 let rec gcd x y = match y with
@@ -53,7 +42,50 @@ let factors' n =
           | xs -> (d, 1)::xs
         else helper (d + 1) n
   in helper 2 n
-  
+
+(* 37: calculate Euler's totient function φ(m) (improved). *)
+let power x p =
+  let rec helper acc p' =
+    if p' < 1 then acc else helper (x * acc) (p' - 1) 
+  in helper 1 p
+
+let phi_improved n =
+  let fs = factors' n in
+	let rec helper acc l = match l with
+		| [] -> acc
+		| (x, y)::xs -> helper ((x-1) * power x (y-1) * acc) xs
+	in helper 1 fs
+
+(* 38: compare the two methods of calculating Euler's totient function. *)
+let timeit f a =
+  let t1 = Unix.gettimeofday() in ignore(f a);
+  let t2 = Unix.gettimeofday() in t2 -. t1
+
+(* 39: a list of prime numbers. *)
+let range x y = (* coming from one of the former challenges *)
+  let rec helper acc i =
+    if i == y then (List.rev acc) @ [i] 
+    else helper (i::acc) (if x <= y then i + 1 else i - 1)
+  in helper [] x
+
+let all_primes x y = range x y |> List.filter is_prime
+
+(* 40: Goldbach's conjecture. *)
+let goldbach x =
+	let rec helper d =
+		if is_prime d && is_prime (x - d)
+      then (d, x - d)
+		  else helper (d + 1)
+	in helper 2
+
+(* 41: a list of Goldbach compositions. *)
+let goldbach_list x y = range x y
+  |> List.filter (fun x -> x mod 2 = 0)
+  |> List.map (fun x -> (x, goldbach x))
+
+let goldbach_limit x y limit = goldbach_list x y
+  |> List.filter (fun (_, (a, b)) -> a > limit && b > limit)
+
 (* list of assertions to test previously defined functions *)
 let () =
   assert (not @@ is_prime 1);
@@ -73,5 +105,31 @@ let () =
   assert (factors 315 = [3; 3; 5; 7]);
 
   assert (factors' 315 = [(3, 2); (5, 1); (7, 1)]);
+
+  assert (phi_improved 10 = 4);
+  assert (phi_improved 13 = 12);
+
+  assert (timeit phi 10090 > timeit phi_improved 10090);
+
+  assert (List.length (all_primes 2 7920) = 1000);
+
+  assert (goldbach 28 = (5, 23));
+
+  let expected =
+    [ (10, (3, 7))
+    ; (12, (5, 7))
+    ; (14, (3, 11))
+    ; (16, (3, 13))
+    ; (18, (5, 13))
+    ; (20, (3, 17))
+    ] in
+  assert (goldbach_list 9 20 = expected);
+  let expected =
+    [ (992, (73, 919))
+    ; (1382, (61, 1321))
+    ; (1856, (67, 1789))
+    ; (1928, (61, 1867))
+    ] in
+  assert (goldbach_limit 1 2000 50 = expected);
 
   print_string @@ "Everything is working fine" ^ "\n"
