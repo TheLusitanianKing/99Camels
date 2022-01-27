@@ -1,4 +1,4 @@
-open List;;
+open List
 
 (* 1: write a function that returns the last element of a list. *)
 let rec last ls = match ls with
