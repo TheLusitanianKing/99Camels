@@ -30,6 +30,21 @@ let table2 x y expr =
     | _ -> failwith "Something has gone wrong." in
   List.map f t
 
+(* 49: Gray code. *)
+(* also called "reflected binary" *)
+let gray n =
+  if n < 1 then failwith "Cannot get code with n < 1."
+  else
+    let rec helper current_code m =
+      if m = n then current_code
+      else
+        let current_code_rev = List.rev current_code in
+        let code' =
+          (List.map (fun x -> "0" ^ x) current_code) @
+          (List.map (fun x -> "1" ^ x) current_code_rev) in
+        helper (code') (m + 1)
+    in helper ["0"; "1"] 1
+
 let () =
   let truth_table =
     [ (true,  true,  true)
@@ -61,5 +76,9 @@ let () =
     ; ([("a", false); ("b", false); ("c", false)], false)
     ] in
   assert (call = truth_table);
+
+  assert (gray 1 = ["0"; "1"]);
+  assert (gray 2 = ["00"; "01"; "11"; "10"]);
+  assert (gray 3 = ["000"; "001"; "011"; "010"; "110"; "111"; "101"; "100"]);
 
   print_string @@ "Everything is working fine" ^ "\n"

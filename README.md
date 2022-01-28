@@ -8,7 +8,7 @@ Noventa e nove desafios LISP resolvidos com OCaml.
 
 * Listas: 25 dos 27.
 * Aritmética: 11 dos 11.
-* Lógica e códigos: 3 dos 5.
+* Lógica e códigos: 4 dos 5.
 
 ## N.B.
 Este é um repositório antigo, com os primeiros commits feitos em 2014.
