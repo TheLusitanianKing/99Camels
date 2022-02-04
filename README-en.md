@@ -9,7 +9,7 @@ Ninety-nine LISP problems solved with OCaml.
 * Lists: 25 out of 27.
 * Arithmetics: 11 out of 11.
 * Logic and codes: 4 out of 5.
-* Binary trees: 1 out of 15.
+* Binary trees: 4 out of 15.
 
 ## N.B.
 This is an old repository with first commits dating of 2014.
