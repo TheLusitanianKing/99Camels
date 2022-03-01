@@ -11,6 +11,16 @@ Noventa e nove desafios LISP resolvidos com OCaml.
 * Lógica e códigos: 4 dos 5.
 * Árvores binárias: 4 dos 15.
 
+# Uso
+Entrar dentro de uma pasta e:
+```bash
+cd binary-trees
+dune build
+# para o nome do executável, é só usar o mesmo nome do ficheiro ml dentro desta pasta
+# e mudar o .ml em .exe
+dune exec ./trees.exe
+```
+
 ## N.B.
 Este é um repositório antigo, com os primeiros commits feitos em 2014.
 

@@ -11,6 +11,16 @@ Ninety-nine LISP problems solved with OCaml.
 * Logic and codes: 4 out of 5.
 * Binary trees: 4 out of 15.
 
+# Uso
+Enter the folder you want and:
+```bash
+cd binary-trees
+dune build
+# for the name, just look at the ml file inside the folder and change it to .exe
+# as follows
+dune exec ./trees.exe
+```
+
 ## N.B.
 This is an old repository with first commits dating of 2014.
 
